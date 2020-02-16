@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+    <bean id="item1" class="cn.edu.zjut.bean.Item" scope="singleton">
+        <constructor-arg index="0" type="java.lang.String">
+            <value>978-7-121-12345-1</value>
+        </constructor-arg>
+        <constructor-arg index="1" type="java.lang.String">
+            <value>JAVAEE 技术实验指导教程</value>
+        </constructor-arg>
+        <constructor-arg index="2" type="java.lang.String">
+            <value>WEB 程序设计知识回顾、轻量级 JAVAEE 应用框架、企业级 EJB 组 件编程技术、JAVAEE 综合应用开发</value>
+        </constructor-arg>
+        <constructor-arg index="3" type="double">
+            <value>19.95</value>
+        </constructor-arg>
+    </bean>
+    <bean id="item2" class="cn.edu.zjut.bean.Item" scope="singleton">
+        <constructor-arg index="0" type="java.lang.String">
+            <value>978-7-121-12345-2</value>
+        </constructor-arg>
+        <constructor-arg index="1" type="java.lang.String">
+            <value>JAVAEE 技术</value>
+        </constructor-arg>
+        <constructor-arg index="2" type="java.lang.String">
+            <value>Struts 框架、Hibernate 框架、Spring 框架、会话 Bean、实体 Bean、消息驱动 Bean</value>
+        </constructor-arg>
+        <constructor-arg index="3" type="double">
+            <value>29.95</value>
+        </constructor-arg>
+    </bean>
+    <bean id="itemorder1" class="cn.edu.zjut.bean.ItemOrder" init-method="init" destroy-method="destroy">
+        <property name="numItems">
+            <value>1</value>
+        </property>
+        <property name="item">
+            <ref bean="item1"/>
+        </property>
+    </bean>
+
+    <bean id="itemorderFactory" class="cn.edu.zjut.bean.ItemOrderFactory"/>
+    <bean id="itemorder2" class="cn.edu.zjut.bean.ItemOrder" factory-method="createItemOrder"
+          factory-bean="itemorderFactory">
+        <property name="numItems">
+            <value>1</value>
+        </property>
+        <property name="item">
+            <ref bean="item1"/>
+        </property>
+    </bean>
+    <!--    <bean id="shoppingcart" class="cn.edu.zjut.bean.ShoppingCart">-->
+    <!--        <property name="itemsOrdered">-->
+    <!--            <list>-->
+    <!--                <ref bean="itemorder1"/>-->
+    <!--                <ref bean="itemorder2"/>-->
+    <!--            </list>-->
+    <!--        </property>-->
+    <!--    </bean>-->
+
+    <!--    <bean id="shoppingcart" class="cn.edu.zjut.bean.ShoppingCart">-->
+    <!--        <property name="itemsOrdered">-->
+    <!--            <set>-->
+    <!--                <ref bean="itemorder1"/>-->
+    <!--                <ref bean="itemorder2"/>-->
+    <!--            </set>-->
+    <!--        </property>-->
+    <!--    </bean>-->
+
+    <!--    <bean id="shoppingcart" class="cn.edu.zjut.bean.ShoppingCart">-->
+    <!--        <property name="itemsOrdered">-->
+    <!--            <map>-->
+    <!--                <entry key="1" value-ref="itemorder1"/>-->
+    <!--                <entry key="2" value-ref="itemorder2"/>-->
+    <!--            </map>-->
+    <!--        </property>-->
+    <!--    </bean>-->
+
+    <!--        <bean id="shoppingcart" class="cn.edu.zjut.bean.ShoppingCart">-->
+    <!--            <property name="itemsOrdered">-->
+    <!--                <props>-->
+    <!--                    <prop key="itemorder1">itemorder1</prop>-->
+    <!--                    <prop key="itemorder2">itemorder2</prop>-->
+    <!--                </props>-->
+    <!--            </property>-->
+    <!--        </bean>-->
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basenames">
+            <list>
+                <value>cn/edu/zjut/local/message</value> <!-- 如果有多个资源文件，全部列在此处 -->
+            </list>
+        </property>
+    </bean>
+
+    ＜bean id=“Toyota” class=“***.Toyota”/＞
+    ＜bean id="Audi" class=“***.Audi"/＞
+    ＜bean id="boy" class=“***.Person"/＞
+
+    <bean class="cn.edu.zjut.listener.EmailNotifier"/>
+
+</beans>

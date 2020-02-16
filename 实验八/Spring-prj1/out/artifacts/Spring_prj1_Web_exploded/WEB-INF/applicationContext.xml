@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd">
+    <bean id="userDAO" class="cn.edu.zjut.dao.CustomerDAO" parent="baseDAO"/>
+
+    <bean id="baseDAO" class="cn.edu.zjut.dao.BaseHibernateDAO">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="userService" class="cn.edu.zjut.service.UserService">
+        <property name="customerDAO" ref="userDAO"/>
+    </bean>
+
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MariaDBDialect</prop>
+            </props>
+        </property>
+        <property name="mappingResources">
+            <list>
+                <value>cn/edu/zjut/po/Customer.hbm.xml</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="userAction" class="cn.edu.zjut.action.UserAction" scope="prototype">
+        <property name="userService" ref="userService"/>
+    </bean>
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="org.mariadb.jdbc.Driver"/>
+        <property name="url" value="jdbc:mariadb://localhost:3306/hibernatedb"/>
+        <property name="username" value="root"/>
+        <property name="password" value="64076407Fxm"/>
+    </bean>
+</beans>

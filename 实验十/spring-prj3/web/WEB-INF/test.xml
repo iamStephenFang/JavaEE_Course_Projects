@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+
+
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://127.0.0.1:3306/hibernatedb?serverTimezone=GMT%2B8&amp;useSSL=false"/>
+        <property name="username" value="lsq"/>
+        <property name="password" value=""/>
+    </bean>
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">
+                    org.hibernate.dialect.MySQLDialect</prop>
+                <prop key="hibernate.autoReconnect">true</prop>
+            </props>
+        </property>
+        <property name="mappingResources">
+            <list><value>cn/edu/zjut/po/Customer.hbm.xml</value> </list>
+        </property>
+    </bean>
+    <bean id="baseDAO" class="cn.edu.zjut.dao.BaseHibernateDAO">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+    <bean id="userDAO" class="cn.edu.zjut.dao.CustomerDAO" parent="baseDAO"/>
+    <bean id="userService" class="cn.edu.zjut.service.UserService">
+        <property name="customerDAO" ref="userDAO" />
+    </bean>
+
+    <bean id="securityHandler"
+          class="cn.edu.zjut.aspect.SecurityHandler" />
+    <bean id="securityHandler2"
+          class="cn.edu.zjut.aspect.SecurityHandler2" />
+    <!-- 配置文件的方式 -->
+    <aop:config >
+        <aop:aspect id="security" ref="securityHandler2">
+            <aop:pointcut id="modify"
+                          expression="execution(* *.add*(..))" />
+            <aop:before method="checkSecurity" pointcut-ref="modify" />
+        </aop:aspect>
+    </aop:config>
+
+
+
+    <!-- 配置事务管理器 -->
+    <bean id="transactionManager"
+          class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+        <property name="sessionFactory">
+            <ref bean="sessionFactory" />
+        </property>
+    </bean>
+
+    <!-- 定义增强处理拦截方法 -->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="add*" propagation="REQUIRED" />
+            <tx:method name="update*" propagation="REQUIRED" />
+            <tx:method name="delete*" propagation="REQUIRED" />
+            <tx:method name="del*" propagation="REQUIRED" />
+            <tx:method name="*" read-only="true" />
+        </tx:attributes>
+    </tx:advice>
+
+    <!-- 定义事务拦截切面 -->
+    <aop:config>
+        <aop:pointcut id="allServiceMethod"
+                      expression="execution(* cn.edu.zjut.service.*.*(..))" />
+        <aop:advisor pointcut-ref="allServiceMethod"
+                     advice-ref="txAdvice" />
+    </aop:config>
+
+
+
+</beans>

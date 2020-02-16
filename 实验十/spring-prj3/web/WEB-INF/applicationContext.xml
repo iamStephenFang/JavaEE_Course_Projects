@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation=" http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <bean id="userService" class="cn.edu.zjut.service.UserService">
+        <property name="customerDAO" ref="userDAO"/>
+    </bean>
+    <bean id="userDAO" class="cn.edu.zjut.dao.CustomerDAO" parent="baseDAO"/>
+    <bean id="baseDAO" class="cn.edu.zjut.dao.BaseHibernateDAO">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MariaDBDialect</prop>
+            </props>
+        </property>
+        <property name="mappingResources">
+            <list>
+                <value>cn/edu/zjut/po/Customer.hbm.xml</value>
+            </list>
+        </property>
+    </bean>
+
+    <tx:annotation-driven />
+    <bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+        <property name="sessionFactory">
+            <ref bean="sessionFactory"/>
+        </property>
+    </bean>
+
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="add*" propagation="REQUIRED"/>
+            <tx:method name="update*" propagation="REQUIRED"/>
+            <tx:method name="delete*" propagation="REQUIRED"/>
+            <tx:method name="del*" propagation="REQUIRED"/>
+            <tx:method name="*" read-only="true"/>
+        </tx:attributes>
+    </tx:advice>
+
+
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="org.mariadb.jdbc.Driver"/>
+        <property name="url" value="jdbc:mariadb://localhost:3306/hibernatedb"/>
+        <property name="username" value="root"/>
+        <property name="password" value="64076407Fxm"/>
+    </bean>
+
+    <aop:config>
+        <aop:pointcut id="allServiceMethod" expression="execution(* cn.edu.zjut.service.*.*(..))"/>
+        <aop:advisor pointcut-ref="allServiceMethod" advice-ref="txAdvice"/>
+    </aop:config>
+
+    <bean id="logAdvice" class="cn.edu.zjut.advice.LoggingAdvice"/>
+
+<!--    <bean id="logProxy" class="org.springframework.aop.framework.ProxyFactoryBean">-->
+<!--        &lt;!&ndash;设定代理的是接口&ndash;&gt;-->
+<!--        <property name="proxyInterfaces">-->
+<!--            <value>cn.edu.zjut.service.IUserService</value>-->
+<!--        </property>-->
+<!--        &lt;!&ndash;设定代理的目标类&ndash;&gt;-->
+<!--        <property name="target">-->
+<!--            <ref bean="userService"/>-->
+<!--        </property>-->
+<!--        &lt;!&ndash;设定切入的 Advice&ndash;&gt;-->
+<!--        <property name="interceptorNames">-->
+<!--            <list>-->
+<!--                <value>logAdvice</value>-->
+<!--            </list>-->
+<!--        </property>-->
+<!--    </bean>-->
+
+    <bean id="logInterceptor" class="cn.edu.zjut.advice.LoggingInterceptor"/>
+
+    <bean id="logProxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="interceptorNames">
+            <list>
+                <value>logAdvice</value>
+                <value>logInterceptor</value>
+            </list>
+        </property>
+        <property name="target">
+            <ref bean="userService"/>
+        </property>
+    </bean>
+    <!--    <aop:aspectj-autoproxy/>-->
+    <!--    <bean id="securityHandler" class="cn.edu.zjut.aspect.SecurityHandler"/>-->
+
+    <!--    <bean id="securityHandler2" class="cn.edu.zjut.aspect.SecurityHandler2"/> &lt;!&ndash; 配置文件的方式 &ndash;&gt;-->
+    <!--    <aop:config>-->
+    <!--        <aop:aspect id="security" ref="securityHandler2">-->
+    <!--            <aop:pointcut id="modify" expression="execution(* *.add*(..))"/>-->
+    <!--            <aop:before method="checkSecurity" pointcut-ref="modify"/>-->
+    <!--        </aop:aspect>-->
+    <!--    </aop:config>-->
+
+</beans>

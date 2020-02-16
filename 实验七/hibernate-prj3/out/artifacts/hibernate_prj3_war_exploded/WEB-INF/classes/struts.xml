@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+        "http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+    <package name="strutsBean" extends="struts-default" namespace="/">
+        <action name="login" class="cn.edu.zjut.action.UserAction" method="login">
+            <result name="success">/loginSuccess.jsp</result>
+            <result name="fail">/login.jsp</result>
+        </action>
+        <action name="addAddr" class="cn.edu.zjut.action.UserAction" method="addAddr">
+            <result name="success">/loginSuccess.jsp</result>
+            <result name="fail">/CURDFail.jsp</result>
+        </action>
+        <action name="delAddr" class="cn.edu.zjut.action.UserAction" method="delAddr">
+            <result name="success">/loginSuccess.jsp</result>
+            <result name="fail">/CURDFail.jsp</result>
+        </action>
+    </package>
+</struts>
