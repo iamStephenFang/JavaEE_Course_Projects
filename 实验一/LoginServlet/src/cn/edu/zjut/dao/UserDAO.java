@@ -18,7 +18,7 @@ public class UserDAO {
         String driver = "org.mariadb.jdbc.Driver";
         String dburl = "jdbc:mariadb://localhost:3306/myDB";
         String username = "root"; //数据库登录用户名
-        String password = "64076407Fxm"; //数据库登录密码
+        String password = "passwd"; //数据库登录密码
         try {
             Class.forName(driver); //加载数据库驱动程序
             conn = DriverManager.getConnection(dburl, username, password);

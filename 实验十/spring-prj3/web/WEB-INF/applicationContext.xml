@@ -56,7 +56,7 @@
         <property name="driverClassName" value="org.mariadb.jdbc.Driver"/>
         <property name="url" value="jdbc:mariadb://localhost:3306/hibernatedb"/>
         <property name="username" value="root"/>
-        <property name="password" value="64076407Fxm"/>
+        <property name="password" value="passwd"/>
     </bean>
 
     <aop:config>

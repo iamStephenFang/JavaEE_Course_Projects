@@ -19,7 +19,7 @@ public class HibernateUtil {
 //            configuration.setProperty("hibernate.connection.driver_class", "org.mariadb.jdbc.Driver")
 //                    .setProperty("hibernate.connection.url", "jdbc:mariadb://localhost:3306/hibernatedb")
 //                    .setProperty("hibernate.connection.username", "root")
-//                    .setProperty("hibernate.connection.password", "64076407Fxm")
+//                    .setProperty("hibernate.connection.password", "passwd")
 //                    .setProperty("hibernate.dialect", "org.hibernate.dialect.MariaDBDialect")
 //                    .setProperty("hibernate.hbm2ddl.auto", "create-drop")
 //                    .addResource("cn/edu/zjut/po/Customer.hbm.xml")

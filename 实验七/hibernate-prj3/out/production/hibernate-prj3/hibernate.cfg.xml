@@ -7,7 +7,7 @@
         <property name="hibernate.connection.driver_class">org.mariadb.jdbc.Driver</property>
         <property name="hibernate.connection.url">jdbc:mariadb://localhost:3306/hibernatedb</property>
         <property name="hibernate.connection.username">root</property>
-        <property name="hibernate.connection.password">64076407Fxm</property>
+        <property name="hibernate.connection.password">passwd</property>
         <property name="hibernate.dialect">org.hibernate.dialect.MariaDBDialect</property>
         <property name="connection.autocommit">true</property>
         <property name="hibernate.show_sql">true</property>
